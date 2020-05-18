@@ -2,18 +2,27 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
-import store from './app/store';
 import { Provider } from 'react-redux';
 import * as serviceWorker from './serviceWorker';
+import { init as initStore } from './store'
 
-ReactDOM.render(
-  <React.StrictMode>
-    <Provider store={store}>
-      <App />
-    </Provider>
-  </React.StrictMode>,
-  document.getElementById('root')
-);
+let __PRELOADED_STATE__ = null
+const reduxRawJson = document.getElementById('__PRELOADED_STATE__')
+if (reduxRawJson) {
+  __PRELOADED_STATE__ = JSON.parse(reduxRawJson.innerHTML)
+}
+const getStore = __PRELOADED_STATE__ ? initStore(__PRELOADED_STATE__) : initStore()
+
+getStore.then(getStore).then(store => {
+  ReactDOM.render(
+    <React.StrictMode>
+      <Provider store={store}>
+        <App />
+      </Provider>
+    </React.StrictMode>,
+    document.getElementById('root')
+  );
+})
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.

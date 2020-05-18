@@ -1,58 +1,69 @@
-import React from 'react';
-import logo from './logo.svg';
-import { Counter } from './features/counter/Counter';
+import React, { PureComponent } from 'react'
 import './App.css';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <Counter />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <span>
-          <span>Learn </span>
-          <a
-            className="App-link"
-            href="https://reactjs.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            React
-          </a>
-          <span>, </span>
-          <a
-            className="App-link"
-            href="https://redux.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Redux
-          </a>
-          <span>, </span>
-          <a
-            className="App-link"
-            href="https://redux-toolkit.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Redux Toolkit
-          </a>
-          ,<span> and </span>
-          <a
-            className="App-link"
-            href="https://react-redux.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            React Redux
-          </a>
-        </span>
-      </header>
-    </div>
-  );
+import { connect } from 'react-redux'
+import { actionCreators } from '../src/actions'
+
+import Tiles from './features/tiles/tiles'
+import Filter from './features/filter/filter'
+
+import { createFilter } from '../src/utils/filter'
+
+type AppPropTypes = {
+  getConcertDetails: Function,
 }
 
-export default App;
+
+export class App extends PureComponent<AppPropTypes> {
+
+  constructor(props: Object) {
+    super(props);
+    const {
+      getConcertDetails,
+    } = props
+    getConcertDetails()
+  }
+
+  state = {
+    filters: this.props.filters,
+    // sorters: this.props.sorters,
+  }
+
+  render() {
+    const { concertDetails : { data : { results } , filters }  } = this.props
+
+    let updatedResult = results;
+
+    if (Array.isArray(filters) && filters.length) {
+      updatedResult = results.filter(createFilter(...filters));
+    }
+
+    return (
+      <div className="app">
+        <header className="appHeader">
+          <h1>Rick and Morty</h1>
+        </header>
+        <section className="section">
+          <div className="filterContainer">
+            <Filter filters={filters} />
+          </div>
+          <div className="tilesContainer">
+            <Tiles concertData={updatedResult} ></Tiles>
+          </div>
+        </section>
+      </div>
+    );
+  }
+}
+
+const { getConcertDetails } = actionCreators
+export const mapDispatchToProps = { getConcertDetails }
+
+export const mapStateToProps = ({ concertDetails }) => ({
+  concertDetails
+})
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(App)

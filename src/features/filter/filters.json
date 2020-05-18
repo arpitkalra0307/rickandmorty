@@ -1,0 +1,25 @@
+[
+  {
+    "category": "species",
+    "type": [
+      "Human",
+      "Alien",
+      "Other Species"
+    ]
+  },
+  {
+    "category": "gender",
+    "type": [
+      "Male",
+      "Female"
+    ]
+  },
+  {
+    "category": "status",
+    "type": [
+      "Alive",
+      "Dead ",
+      "Unknown"
+    ]
+  }
+]

@@ -1,0 +1,9 @@
+.filters {
+  padding: 12px;
+  border: 1px solid grey;
+  margin-top: 24px;
+}
+
+.filters span {
+  text-transform: capitalize;
+}
